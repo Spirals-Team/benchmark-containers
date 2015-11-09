@@ -1,0 +1,25 @@
+--- a/pkgs/libs/uptcpip/src/include/sys/bsd__types.h	2016-01-02 15:32:50.000000000 +0100
++++ b/pkgs/libs/uptcpip/src/include/sys/bsd__types.h	2016-01-02 15:32:16.000000000 +0100
+@@ -97,12 +97,15 @@
+  * mbstate_t is an opaque object to keep conversion state during multibyte
+  * stream conversions.
+  */
+-#ifndef __mbstate_t_defined
+-# define __mbstate_t_defined    1
+-typedef union {
+-	char		__mbstate8[128];
+-	__int64_t	_mbstateL;	/* for alignment */
+-} __mbstate_t;
+-#endif 
++
++/*
++*#ifndef __mbstate_t_defined
++*# define __mbstate_t_defined    1
++*typedef union {
++*	char		__mbstate8[128];
++*	__int64_t	_mbstateL;	
++* } __mbstate_t;
++* #endif 
++*/
+ 
+ #endif /* !_BSD_SYS__TYPES_H_ */
