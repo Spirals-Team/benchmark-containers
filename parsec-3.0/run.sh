@@ -1,129 +1,129 @@
-#!/bin/bash
-parsecapps=(blackscholes bodytrack facesim ferret fluidanimate freqmine swaptions vips x264)
+#!/bin/sh
 
-parseckernel=(canneal dedup streamcluster)
+# Initialize our own variables:
+parsec_home='pkgs'
+splash2_home='ext/splash2'
+splash2x_home='ext/splash2x'
 
-splash2apps=(barnes ffm ocean_np ocean_ncp radiosity volrend water_nsquared water_spatial)
+cmd='bin/parsecmgmt '
+input='test'
 
-splash2kernel=(cholesky fft lu_cb lu_ncb radix)
+while getopts ":S:a:p:c:d:i:n:s:x:km:t:r:lh" opt; do
+  case $opt in
+    S)
+      suite=$OPTARG
+      ;;
+    a)
+      if [ "$OPTARG" = "run" ];
+      then
+        action=true
+      fi
+      cmd="$cmd -a $OPTARG"
+      ;;
+    p)
+      package=$OPTARG
+      ;;
+    c)
+      cmd="$cmd -c $OPTARG"
+      ;;
+    d)
+      cmd="$cmd -d $OPTARG"
+      ;;
+    i)
+      input=$OPTARG
+      cmd="$cmd -i $input"
+      ;;
+    n)
+      cmd="$cmd -n $OPTARG"
+      ;;
+    s)
+      cmd="$cmd -s $OPTARG"
+      ;;
+    x)
+      cmd="$cmd -x $OPTARG"
+      ;;
+    k)
+      cmd="$cmd -k"
+      ;;
+    m)
+      cmd="$cmd -m $OPTARG"
+      ;;
+    t)
+      cmd="$cmd -t $OPTARG"
+      ;;
+    r)
+      cmd="$cmd -r $OPTARG"
+      ;;
+    l)
+      cmd="$cmd -l"
+      ;;
+    h)
+      cmd="$cmd -h"
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
 
-input=(test native simdev simlarge simmedium simsmall)
+shift $(($OPTIND - 1))
 
+case "$package" in
+  *parsec\.*)
+    suite="parsec"
+    package=${package#"${suite}."}
+    ;;
+  *splash2\.*)
+    suite="splash2"
+    package=${package#"${suite}."}
+    ;;
+  *splash2x\.*)
+    suite="splash2x"
+    package=${package#"${suite}."}
+    ;;
+esac
 
-if [ "$1" = "help" ];
-	then
-		cat help.txt
+if [ \( -n "${action+x}" -a \( -z "${suite+x}" -o -z "${package+x}" \) \) ];
+then
+    echo "A suite (-S parsec|splash2|splash2x) and a package (-p) should be specified, or specify the fullname of the package." >&2
+    exit 1
+elif [ \( -n "${action+x}" \) -a \( -n "${suite+x}" \) -a \( -n "${package+x}" \) ]
+then
+  case "$suite" in
+    'parsec')
+      path=$(find $parsec_home -maxdepth 2 -name $package)
+      ;;
+    'splash2')
+      path=$(find $splash2_home -maxdepth 2 -name $package)
+      ;;
+    'splash2x')
+      path=$(find $splash2x_home -maxdepth 2 -name $package)
+      ;;
+    *)
+      echo "Invalid suite: -S (has to be parsec, splash2 or splash2x)" >&2
+      exit 1
+      ;;
+  esac
+
+  if [ -n "$(find $path/inputs -name input_${input}.tar.xz)" ];
+  then
+    echo "Decompressing input $input for ${suite}.${package}..." >&2
+    unxz $path/inputs/input_${input}.tar.xz
+  else
+    echo "Input $input not available for ${suite}.${package}." >&2
+    exit 1
+  fi
+  echo "Launching ${suite}.${package}..." >&2
+
+  cmd="$cmd -p ${suite}.${package}"
+
+  $cmd
+else
+  $cmd
 fi
-
-
-if [ "$1" = "uncompress-help" ];
-	then
-		cat htu.txt
-fi
-
-if [ "$1" = "status" ];
-	then
-		bin/parsecmgmt -a status
-fi
-
-
-if [ "$1" = "run" ];
-	then
-		bin/parsecmgmt -a $1 -p $2 -c $3 -i $4 $5 $6
-fi
-
-#Part that uncompress a given benchmark input workload
-if [ "$1" = "use" ]
-	then
-		#Case of raytrace benchmark which is present in splash2(x) and parsec
-		if [ "$2" = "raytrace" ] ; then
-				if [ "$3" = "2" ] ; then
-					if echo ${input[@]} | grep -q -w "$4" ; then
-	    				unxz ext/splash2/apps/$2/inputs/input_$4.tar.xz
-					elif [ "$4" = "all" ] ; then
-	    				unxz ext/splash2/apps/$2/inputs/*.tar.xz
-					else
-							echo "this input worload does not exists"
-					fi
-				elif [ "$3" = "2x" ] ; then
-					if echo ${input[@]} | grep -q -w "$4" ; then
-	    				unxz ext/splash2x/apps/$2/inputs/input_$4.tar.xz
-					elif [ "$4" = "all" ] ; then
-	    				unxz ext/splash2x/apps/$2/inputs/*.tar.xz
-					else
-							echo "this input worload does not exists"
-					fi
-				else
-					unxz pkgs/apps/raytrace/inputs/input_$3.tar.xz
-				fi
-		else
-		# apps of parsec
-			if echo ${parsecapps[@]} | grep -q -w "$2" ; then 
-				if echo ${input[@]} | grep -q -w "$3" 
-					then
-	    				unxz pkgs/apps/$2/inputs/input_$3.tar.xz
-				elif [ "$3" = "all" ] ; then
-					unxz pkgs/apps/$2/inputs/*.tar.xz
-				else
-						echo "this input worload does not exists"
-				fi
-		# kernels of parsec
-			elif echo ${parseckernel[@]} | grep -q -w "$2" ; then 
-				if  echo ${input[@]} | grep -q -w "$3" 
-					then
-	    				unxz pkgs/kernels/$2/inputs/input_$3.tar.xz
-				elif [ "$3" = "all" ] ; then
-					unxz pkgs/kernels/$2/inputs/*.tar.xz
-				else
-						echo "this input worload does not exists"
-				fi
-		#apps of splash
-			elif echo ${splash2apps[@]} | grep -q -w "$2"; then
-				#Case splash2x
-				if  [ "$3" = "x" ]
-					then
-						if  echo ${input[@]} | grep -q -w "$4" 
-							then
-	    						unxz ext/splash2x/apps/$2/inputs/input_$4.tar.xz
-						elif [ "$3" = "all" ] ; then
-								unxz ext/splash2x/apps/$2/inputs/*.tar.xz
-						else
-							echo "this input worload does not exists"
-						fi
-				elif  echo ${input[@]} | grep -q -w "$3" 
-					then
-	    				unxz ext/splash2/apps/$2/inputs/input_$3.tar.xz
-				elif [ "$3" = "all" ] ; then
-						unxz ext/splash2/apps/$2/inputs/*.tar.xz
-				else
-						echo "this input worload does not exists"
-				fi
-		# kernels of splash
-			elif echo ${splash2kernel[@]} | grep -q -w "$2"; then
-				#Case splash2x
-				if  [ "$3" = "x" ]
-					then
-						if  echo ${input[@]} | grep -q -w "$4" 
-							then
-	    						unxz ext/splash2x/kernels/$2/inputs/input_$4.tar.xz
-						elif [ "$4" = "all" ] ; then
-								unxz ext/splash2x/kernels/$2/inputs/*.tar.xz
-						else
-							echo "this input worload does not exists"
-						fi
-				elif  echo ${input[@]} | grep -q -w "$3" 
-					then
-	    				unxz ext/splash2/kernels/$2/inputs/input_$3.tar.xz
-				elif [ "$3" = "all" ] ; then
-						unxz ext/splash2/kernels/$2/inputs/*.tar.xz
-				else
-						echo "this input worload does not exists"
-				fi			
-			else 
-	    			echo "given benchmark doesn't exists"
-			fi
-	fi
-fi
-
-
 
