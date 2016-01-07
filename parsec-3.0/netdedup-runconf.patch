@@ -1,0 +1,42 @@
+--- a/pkgs/netapps/netdedup/parsec/simdev.runconf
++++ b/pkgs/netapps/netdedup/parsec/simdev.runconf
+@@ -13,8 +13,8 @@
+ 
+ 
+ # Binary file to execute, relative to installation root
+-run_exec="bin/netdedup"
++run_exec="bin/run.sh"
+ 
+ # Arguments to use
+-run_args="-c -p -v -t ${NTHREADS} -i hamlet.dat -o output.dat.ddp"
++run_args="${NTHREADS} simdev"
+ 
+
+--- a/pkgs/netapps/netdedup/parsec/simmedium.runconf
++++ b/pkgs/netapps/netdedup/parsec/simmedium.runconf
+@@ -13,8 +13,7 @@
+ 
+ 
+ # Binary file to execute, relative to installation root
+-run_exec="bin/netdedup"
++run_exec="bin/run.sh"
+ 
+ # Arguments to use
+-run_args="-c -p -v -t ${NTHREADS} -i media.dat -o output.dat.ddp"
+-
++run_args="${NTHREADS} simmedium"
+
+
+--- a/pkgs/netapps/netdedup/parsec/simsmall.runconf
++++ b/pkgs/netapps/netdedup/parsec/simsmall.runconf
+@@ -13,8 +13,7 @@
+ 
+ 
+ # Binary file to execute, relative to installation root
+-run_exec="bin/netdedup"
++run_exec="bin/run.sh"
+ 
+ # Arguments to use
+-run_args="-c -p -v -t ${NTHREADS} -i media.dat -o output.dat.ddp"
+-
++run_args="${NTHREADS} simsmall"

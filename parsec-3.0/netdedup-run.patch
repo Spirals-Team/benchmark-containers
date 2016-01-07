@@ -1,0 +1,35 @@
+--- a/pkgs/netapps/netdedup/src/run.sh
++++ b/pkgs/netapps/netdedup/src/run.sh
+@@ -29,11 +29,11 @@ case "${INPUTSIZE}" in
+ "test"	) 
+ 	PROGARGS_CLIENT="-i test.dat";;
+ "simdev"	) 
+-	PROGARGS_CLIENT="-i test.dat";;
++	PROGARGS_CLIENT="-i hamlet.dat";;
+ "simsmall"	) 
+-	PROGARGS_CLIENT="-i test.dat";;
++	PROGARGS_CLIENT="-i media.dat";;
+ "simmedium"	) 
+-	PROGARGS_CLIENT="-i test.dat";;
++	PROGARGS_CLIENT="-i media.dat";;
+ "simlarge"	) 
+ 	PROGARGS_CLIENT="-i media.dat";;
+ "native"	) 
+@@ -60,7 +60,7 @@ if [ -z "$NETMODE" ]; then
+   eval $RUN_CLIENT
+   eval $RUN_SERVER
+ 
+-elif [ "$NETMODE" == "server" ]; then
++elif [ "$NETMODE" = "server" ]; then
+   RUN_SERVER="$PROG_PATH/netdedup_sim $PROGARGS_SERVER"
+ 
+   echo "Running"
+@@ -68,7 +68,7 @@ elif [ "$NETMODE" == "server" ]; then
+ 
+   eval $RUN_SERVER
+ 
+-elif [ "$NETMODE" == "client" ]; then
++elif [ "$NETMODE" = "client" ]; then
+   RUN_CLIENT="$PROG_PATH/netdedup_client_sim $PROGARGS_CLIENT"
+ 
+   echo "Running"

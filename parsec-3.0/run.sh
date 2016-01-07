@@ -110,14 +110,16 @@ then
       ;;
   esac
 
-  if [ -n "$(find $path/inputs -name input_${input}.tar.xz)" ];
+  if [ -d "$path/inputs" -a -e "$path/inputs/input_${input}.tar.xz" ];
   then
     echo "Decompressing input $input for ${suite}.${package}..." >&2
     unxz $path/inputs/input_${input}.tar.xz
-  else
+  elif [ -d "$path/inputs" ]
+  then 
     echo "Input $input not available for ${suite}.${package}." >&2
     exit 1
   fi
+
   echo "Launching ${suite}.${package}..." >&2
 
   cmd="$cmd -p ${suite}.${package}"

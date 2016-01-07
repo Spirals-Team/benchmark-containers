@@ -2,8 +2,8 @@ FROM debian:latest
 
 RUN mkdir /home/parsec-3.0
 
-# Copy scripts for getting build configurations, building parsec and running parsec, as well as help text file  
-COPY getCompilConf.sh build.sh run.sh pod.patch uptcpip.patch /home/parsec-3.0/
+# Copy scripts for getting build configurations, getting patches, building parsec and running parsec  
+COPY getCompilConf.sh build.sh run.sh pod.patch uptcpip.patch netdedup-run.patch netdedup-runconf.patch /home/parsec-3.0/
 
 # Install needed libraries for Parsec build, download, untar, compile and clean Parsec folder
 RUN apt-get clean && apt-get update && apt-get install -y \
@@ -23,6 +23,8 @@ RUN apt-get clean && apt-get update && apt-get install -y \
 && cd /home/parsec-3.0 \
 && patch -p1 < pod.patch \
 && patch -p1 < uptcpip.patch \
+&& patch -p1 < netdedup-run.patch \
+&& patch -p1 < netdedup-runconf.patch \
 && find /home/parsec-3.0/ -name \*.tar -exec xz -9 \{\} \; \
 && sh /home/parsec-3.0/getCompilConf.sh \
 && sh /home/parsec-3.0/build.sh \
@@ -32,7 +34,10 @@ RUN apt-get clean && apt-get update && apt-get install -y \
 && rm -rf pkgs/libs pkgs/tools \
 && rm -rf ext/splash2/README.SPLASH2 ext/splash2/SPLASH2.POSTING ext/splash2/null_macros \
 && find 'pkgs' -depth -mindepth 3 -maxdepth 3 -not -name inputs -not -name inst -not -name parsec -exec rm -rf \{\} \; \
-&& find 'ext' -depth -mindepth 4 -maxdepth 4 -not -name inputs -not -name inst -not -name parsec -exec rm -rf \{\} \;
+&& find 'ext' -depth -mindepth 4 -maxdepth 4 -not -name inputs -not -name inst -not -name parsec -exec rm -rf \{\} \; \
+# Create missing symbolic links for network packages
+&& cd /home/parsec-3.0/pkgs/netapps/netdedup && ln -sf ../../kernels/dedup/inputs \
+&& cd /home/parsec-3.0/pkgs/netapps/netferret && ln -sf ../../apps/ferret/inputs
 
 WORKDIR /home/parsec-3.0
 
