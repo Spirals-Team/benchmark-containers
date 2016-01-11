@@ -1,0 +1,6 @@
+Bench: is
+  DATA: -
+  CLASS: S | W | A | B | C | D 
+  NBPROC: 1 | 2 | 4 | 8 | 16... (must be a power of 2 for S W A B C, and only greater or equal than 4 for class D)
+  CMD: -np [NBPROC] [is.CLASS.NBPROC]
+

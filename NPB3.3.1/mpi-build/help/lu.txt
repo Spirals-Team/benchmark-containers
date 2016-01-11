@@ -1,0 +1,6 @@
+Bench: lu 
+  DATA: (inputlu.data)
+  CLASS: S | W | A | B | C | D | E
+  NBPROC: 1 | 2 | 4 | 8 | 16... (must be a power of 2)
+  CMD: -np [NBPROC] [lu.CLASS.NBPROC]
+	

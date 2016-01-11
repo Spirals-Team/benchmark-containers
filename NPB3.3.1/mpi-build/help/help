@@ -1,0 +1,16 @@
+#/bin/bash
+
+path=/home/NPB3.3.1/NPB3.3-MPI
+echo "Follow these templates to use this self-managed docker image." >&2
+echo ""
+
+cat $path/help/bt.txt >&2
+cat $path/help/cg.txt >&2
+cat $path/help/dt.txt >&2
+cat $path/help/ep.txt >&2
+cat $path/help/ft.txt >&2
+cat $path/help/is.txt >&2
+cat $path/help/lu.txt >&2
+cat $path/help/mg.txt >&2
+cat $path/help/sp.txt >&2
+

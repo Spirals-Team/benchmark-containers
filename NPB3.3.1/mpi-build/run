@@ -1,0 +1,27 @@
+#!/bin/sh
+
+path=/home/NPB3.3.1/NPB3.3-MPI
+
+case "$1" in
+  --help)
+    if [ -z "${2}" ]
+    then
+      $path/help/help
+    elif [ \( -n "${2}" \) -a \( -f $path/help/$2.txt \) ]
+    then
+      echo "" >&2
+      cat $path/help/${2}.txt >&2
+    else
+     echo "" >&2
+      cat $path/help/helpusage.txt >&2
+    fi
+    ;;
+  -np)
+    mpirun -np $2 $path/bin/$3 $4
+    ;;
+  *)
+    echo "Usage: --help | --help [benchmark] | -np NBPROC [BENCH.CLASS.NBPROC] [OPTION]" >&2
+    exit 1
+    ;;
+esac
+

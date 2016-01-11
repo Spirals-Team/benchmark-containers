@@ -1,0 +1,6 @@
+Bench: bt 
+  DATA: (inputbt.data)
+  CLASS: S | W | A | B | C | D | E
+  NBPROC: 1 | 4 | 9 | 16... (Square only, max 16 for class S)
+  CMD: -np [NBPROC] [bt.CLASS.NBPROC]
+

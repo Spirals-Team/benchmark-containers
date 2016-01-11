@@ -1,0 +1,7 @@
+Bench: dt 
+  DATA: -
+  CLASS: S | W | A | B 
+  NBPROC: -
+  OPTION: BH | SH | WH 
+  CMD: -np [NBPROC] [BENCH.CLASS.x] [OPTION]
+

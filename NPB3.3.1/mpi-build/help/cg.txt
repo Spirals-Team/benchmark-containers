@@ -1,0 +1,6 @@
+Bench: cg
+  DATA: -
+  CLASS: S | W | A | B | C | D | E
+  NBPROC: 1 | 2 | 4 | 8 | 16... (must be a power of 2)
+  CMD: -np [NBPROC] [cg.CLASS.NBPROC]
+

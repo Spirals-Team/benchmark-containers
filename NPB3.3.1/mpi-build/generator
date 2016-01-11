@@ -1,0 +1,49 @@
+#!/bin/bash
+
+( 
+  # Configuration
+  class=(S W A B C D E)
+  bench=(bt cg dt ep ft is lu mg sp)
+  proc=$1
+
+  rm -f config/suite.def
+  touch config/suite.def
+
+  if [[ $proc =~ ^[0-9]+$ ]]
+  then
+    # Limit for bench using square nb proc.
+    cmdsub="scale=0;sqrt($proc)"
+    squareProc=`echo $cmdsub | bc`     
+   
+    for (( b=0; b<${#bench[*]}; b++ ))
+    do
+      for (( c=0; c<${#class[*]}; c++ ))
+      do
+        if [ "${bench[$b]}" = "bt" -o "${bench[$b]}" = "sp" ]
+        then
+          # Square proc loop
+          for (( p=1; p<= $squareProc; p++ ))
+          do
+            if [ ! "${class[$c]}" = "S" ] || [ $p -le 4 ]
+            then
+              echo "${bench[$b]} ${class[$c]} $(($p * $p))" >> config/suite.def
+            fi
+          done
+        else
+          # Pow 2 proc loop
+          for (( p=1; p<= $proc ; p*=2 ))
+          do
+            if [ \( "${bench[$b]}" != "dt" -a "${bench[$b]}" != "is" \) -o \( "${bench[$b]}" = "dt" -a "${class[$c]}" != "C" -a "${class[$c]}" != "D" -a "${class[$c]}" != "E" \) -o \( "${bench[$b]}" = "is" -a \( \( "${class[$c]}" = "D" -a $p -ge 4 \) -o "${class[$c]}" != "D" -a "${class[$c]}" != "E" \) \) ]
+            then
+              # Writing the bench to build
+              echo "${bench[$b]} ${class[$c]} $p" >> config/suite.def
+            fi
+          done
+        fi
+      done
+    done
+  else
+    echo "PROC_NB must be an integer." >&2
+  fi
+)
+
