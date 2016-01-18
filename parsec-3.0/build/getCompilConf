@@ -8,7 +8,7 @@
   for pkg in $pkgs
   do
     cd $pkg
-	
+  
     benchs=$(ls) 
 
     #For each benchmark we write available compile configurations in a file
@@ -16,7 +16,7 @@
     do
       echo $bench : $(ls $bench/parsec/ | grep -v "icc" | grep '.bldconf$' | cut -d'.' -f 1) >> ../../compilConf.txt
     done
-	
+  
     cd ..
   done 
 
@@ -48,4 +48,3 @@
 
   done
 )
-

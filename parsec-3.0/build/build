@@ -13,4 +13,3 @@
 
   done < compilConf.txt
 )
-
