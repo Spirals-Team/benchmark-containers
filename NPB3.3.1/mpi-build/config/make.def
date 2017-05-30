@@ -14,7 +14,7 @@
 # For CG, EP, FT, MG, LU, SP and BT, which are in Fortran, the following must 
 # be defined:
 #
-# GFORTRAN    - Fortran compiler
+# MPIF77     - Fortran compiler
 # FFLAGS     - Fortran compilation arguments
 # FMPI_INC   - any -I arguments required for compiling MPI/Fortran 
 # FLINK      - Fortran linker
@@ -29,24 +29,24 @@
 #---------------------------------------------------------------------------
 # This is the fortran compiler used for MPI programs
 #---------------------------------------------------------------------------
-MPIF77 = gfortran
+MPIF77 = mpif77
 # This links MPI fortran programs; usually the same as ${MPIF77}
 FLINK	= $(MPIF77)
 
 #---------------------------------------------------------------------------
 # These macros are passed to the linker to help link with MPI correctly
 #---------------------------------------------------------------------------
-FMPI_LIB  = -L/usr/lib -lmpi
+FMPI_LIB  = -L/usr/local/lib -lmpi
 
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'mpif.h'
 #---------------------------------------------------------------------------
-FMPI_INC = -I/usr/include/mpi
+FMPI_INC = -I/usr/local/include
 
 #---------------------------------------------------------------------------
 # Global *compile time* flags for Fortran programs
 #---------------------------------------------------------------------------
-FFLAGS	= -O -fdefault-integer-8 -mcmodel=large
+FFLAGS	= -O -m64 -mcmodel=large
 
 #---------------------------------------------------------------------------
 # Global *link time* flags. Flags for increasing maximum executable 
@@ -75,24 +75,24 @@ FLINKFLAGS = -O
 #---------------------------------------------------------------------------
 # This is the C compiler used for MPI programs
 #---------------------------------------------------------------------------
-MPICC = cc
+MPICC = mpicc
 # This links MPI C programs; usually the same as ${MPICC}
 CLINK	= $(MPICC)
 
 #---------------------------------------------------------------------------
 # These macros are passed to the linker to help link with MPI correctly
 #---------------------------------------------------------------------------
-CMPI_LIB  = -L/usr/lib -lmpi
+CMPI_LIB  = -L/usr/local/lib -lmpi
 
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'mpi.h'
 #---------------------------------------------------------------------------
-CMPI_INC = -I/usr/include/mpi
+CMPI_INC = -I/usr/local/include
 
 #---------------------------------------------------------------------------
 # Global *compile time* flags for C programs
 #---------------------------------------------------------------------------
-CFLAGS	= -O -mcmodel=large
+CFLAGS	= -O -m64 -mcmodel=large
 
 #---------------------------------------------------------------------------
 # Global *link time* flags. Flags for increasing maximum executable 
