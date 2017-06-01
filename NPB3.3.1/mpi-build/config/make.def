@@ -36,12 +36,12 @@ FLINK	= $(MPIF77)
 #---------------------------------------------------------------------------
 # These macros are passed to the linker to help link with MPI correctly
 #---------------------------------------------------------------------------
-FMPI_LIB  = -L/usr/local/lib -lmpi
+FMPI_LIB  = -L/usr/lib -lmpi
 
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'mpif.h'
 #---------------------------------------------------------------------------
-FMPI_INC = -I/usr/local/include
+FMPI_INC = -I/usr/include
 
 #---------------------------------------------------------------------------
 # Global *compile time* flags for Fortran programs
@@ -82,12 +82,12 @@ CLINK	= $(MPICC)
 #---------------------------------------------------------------------------
 # These macros are passed to the linker to help link with MPI correctly
 #---------------------------------------------------------------------------
-CMPI_LIB  = -L/usr/local/lib -lmpi
+CMPI_LIB  = -L/usr/lib -lmpi
 
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'mpi.h'
 #---------------------------------------------------------------------------
-CMPI_INC = -I/usr/local/include
+CMPI_INC = -I/usr/include
 
 #---------------------------------------------------------------------------
 # Global *compile time* flags for C programs
