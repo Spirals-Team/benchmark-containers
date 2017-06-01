@@ -9,8 +9,13 @@ COPY . ./
 ARG NB_PROC=32
 
 # Install needed libraries for NPB MPI build, generate the build suite, build, and remove unneeded packages
-RUN apt-get update && apt-get install -y build-essential mpich \
-&& perl suite_generator.pl $NB_PROC >config/suite.def && make suite && make clean \
-&& apt-get remove -y build-essential && apt-get -y autoclean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+&& apt-get install -y build-essential mpich \
+&& perl suite_generator.pl $NB_PROC >config/suite.def \
+&& make suite \
+&& make clean \
+&& apt-get remove -y build-essential \
+&& apt-get -y autoclean \
+&& rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT ["./run"]
